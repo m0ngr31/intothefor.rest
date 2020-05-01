@@ -1,5 +1,7 @@
 # Into The Forrest
 
+![Screenshot](https://i.imgur.com/ERYGe6p.png)
+
 ### What is this?
 A free, simple tool to help searchers of Forrest Fenn's treasure. Each layer you can toggle was created with a pile of scripts based on various things that Forrest has said from USGS provided GIS files. I'm working on making this reproducable in the future to make the information as accessible and tweakable as possible, but this site is the easiest way to currenty use the work I've done.
 
