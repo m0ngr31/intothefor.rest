@@ -1,6 +1,6 @@
 {
-  "name": "intotheforrest",
-  "version": "0.1.0",
+  "name": "intothefor.rest",
+  "version": "0.7.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

@@ -12,7 +12,6 @@
       :access-token="appToken"
       :map-options="mapOptions"
       @map-init="mapInit"
-      @map-load="mapLoaded"
     ></mapbox>
     <div class="card layerCard">
       <div class="card-header">
@@ -230,6 +229,18 @@ export default class App extends Vue {
 
   mapInit(map) {
     this.map = map;
+
+    map.on('style.load', () => {
+      const waiting = () => {
+        if (!map.isStyleLoaded()) {
+          setTimeout(waiting, 100);
+        } else {
+          this.mapLoaded(map);
+        }
+      };
+
+      waiting();
+    });
   }
 
   mapLoaded(map) {
@@ -260,7 +271,7 @@ export default class App extends Vue {
     map.on('mouseleave', 'hot', () => { this.map.getCanvas().style.cursor = ''; });
     map.on('mouseleave', 'warm', () => { this.map.getCanvas().style.cursor = ''; });
 
-    _.defer(() => this.parseHash());
+    this.parseHash();
   }
 
   geothermal(e) {
@@ -299,7 +310,7 @@ export default class App extends Vue {
       try {
         if (layer.layout.visibility === 'none') {
           this.map.setLayoutProperty(layer.id, 'visibility', 'visible');
-          layer.layout.visibility = 'visibile';
+          layer.layout.visibility = 'visible';
         } else {
           this.map.setLayoutProperty(layer.id, 'visibility', 'none');
           layer.layout.visibility = 'none';
@@ -327,7 +338,7 @@ export default class App extends Vue {
   parseHash() {
     const [, layers] = window.location.hash.split('&layers=');
 
-    if (!layers.length) {
+    if (!layers || !layers.length) {
       return;
     }
 
@@ -340,7 +351,7 @@ export default class App extends Vue {
         try {
           $(`#${layerId}`)[0].checked = true;
           this.map.setLayoutProperty(layerId, 'visibility', 'visible');
-          layer.layout.visibility = 'visibile';
+          layer.layout.visibility = 'visible';
         } catch (e) {
           // Do nothing
         }
@@ -353,7 +364,7 @@ export default class App extends Vue {
     let layersStr = '';
 
     _.forEach(this.layers, (layer) => {
-      if (layer.layout.visibility === 'visibile') {
+      if (layer.layout.visibility === 'visible') {
         layersStr += `${layer.id} `;
       }
     });
